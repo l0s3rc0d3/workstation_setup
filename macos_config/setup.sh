@@ -133,7 +133,8 @@ set -e
 
 section "3/9 · Nerd Font (${NERD_FONT})"
 
-brew tap homebrew/cask-fonts 2>/dev/null || true
+# Note: homebrew/cask-fonts tap was merged into homebrew/cask in 2024;
+# fonts are now installed directly without tapping.
 
 set +e
 if brew list --cask "${NERD_FONT}" &>/dev/null 2>&1; then
@@ -202,7 +203,7 @@ fi
 if ! command -v fzf &>/dev/null; then
   info "Installing fzf…"
   brew install fzf
-  "$(brew --prefix)/opt/fzf/install" --key-bindings --completion --no-update-rc
+  "$(brew --prefix fzf)/install" --key-bindings --completion --no-update-rc
 else
   info "fzf already installed — skipping."
 fi
@@ -252,7 +253,7 @@ else
   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path
 fi
 
-CARGO_ENV="${HOME}/.cargo/env"
+# Rust env is sourced at shell startup via ~/.cargo/env in .zshrc
 
 # =============================================================================
 # ── 7. PYTHON VENV SUPPORT ───────────────────────────────────────────────────
@@ -416,7 +417,8 @@ source "$ZSH/oh-my-zsh.sh"
 eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # ── Go ───────────────────────────────────────────────────────────────────────
-export PATH="$PATH:/usr/local/go/bin"
+export GOPATH="$HOME/go"
+export PATH="$PATH:/usr/local/go/bin:$GOPATH/bin"
 
 # ── Rust / Cargo ─────────────────────────────────────────────────────────────
 [[ -f "$HOME/.cargo/env" ]] && source "$HOME/.cargo/env"
@@ -433,9 +435,12 @@ export FZF_BASE="$(brew --prefix fzf)"
 export DOCKER_HOST="unix://$HOME/.local/share/containers/podman/machine/podman.sock"
 
 # ── History ──────────────────────────────────────────────────────────────────
-export HISTCONTROL=ignoreboth
+# zsh uses setopts, not bash's HISTCONTROL
+setopt HIST_IGNORE_SPACE    # ignore commands starting with a space
+setopt HIST_IGNORE_DUPS     # ignore consecutive duplicate commands
+setopt HIST_IGNORE_ALL_DUPS # remove older duplicate entries from history
+setopt SHARE_HISTORY        # share history across all open shells
 export HISTORY_IGNORE="(\&|[bf]g|c|clear|history|exit|q|pwd|* --help)"
-setopt SHARE_HISTORY
 
 # ── man page colours ─────────────────────────────────────────────────────────
 export LESS_TERMCAP_md="$(tput bold 2>/dev/null; tput setaf 2 2>/dev/null)"
@@ -474,9 +479,9 @@ alias k='kubectl'
 # Make the 'k' alias also benefit from completion
 complete -o default -F __start_kubectl k
 
-# ── Go workspace (override if you use a custom GOPATH) ───────────────────────
-export GOPATH="$HOME/go"
-export PATH="$PATH:$GOPATH/bin"
+# ── Go workspace ─────────────────────────────────────────────────────────────
+# GOPATH is set in .zshrc; override here only if you need a custom path.
+# export GOPATH="$HOME/go"
 
 # ── AWS CLI ──────────────────────────────────────────────────────────────────
 # Shell completion (requires awscli installed via brew)
