@@ -155,7 +155,9 @@ if ! command -v tfenv &>/dev/null; then
   info "Installing tfenv…"
   brew install tfenv
 fi
-if ! tfenv list | grep -q "No versions installed"; then
+# tfenv list exits 0 but prints "No versions installed." when terraform is absent;
+# use command -v terraform as the reliable check instead.
+if ! command -v terraform &>/dev/null; then
   info "Installing latest Terraform via tfenv…"
   tfenv install latest
   tfenv use latest
