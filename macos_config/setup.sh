@@ -113,14 +113,19 @@ CASK_APPS=(
   appcleaner
 )
 
+set +e  # brew list returns exit 1 for uninstalled casks; don't let it abort the script
 for app in "${CASK_APPS[@]}"; do
-  if brew list --cask "$app" &>/dev/null; then
-    info "$app already installed — skipping."
+  if brew list --cask "${app}" &>/dev/null 2>&1; then
+    info "${app} already installed — skipping."
   else
-    info "Installing $app…"
-    brew install --cask "$app"
+    info "Installing ${app}…"
+    brew install --cask "${app}"
+    if [[ $? -ne 0 ]]; then
+      warn "Failed to install cask: ${app} — continuing."
+    fi
   fi
 done
+set -e
 
 # =============================================================================
 # ── 3. NERD FONT ─────────────────────────────────────────────────────────────
@@ -130,12 +135,14 @@ section "3/9 · Nerd Font (${NERD_FONT})"
 
 brew tap homebrew/cask-fonts 2>/dev/null || true
 
-if brew list --cask "${NERD_FONT}" &>/dev/null; then
+set +e
+if brew list --cask "${NERD_FONT}" &>/dev/null 2>&1; then
   info "${NERD_FONT} already installed — skipping."
 else
   info "Installing ${NERD_FONT}…"
   brew install --cask "${NERD_FONT}"
 fi
+set -e
 
 # =============================================================================
 # ── 4. CLI TOOLS ─────────────────────────────────────────────────────────────
