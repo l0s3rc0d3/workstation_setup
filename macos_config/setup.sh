@@ -281,6 +281,14 @@ fi
 
 section "8/9 · Podman machine (Apple Hypervisor)"
 
+# podman-desktop is a GUI-only cask — the CLI must be installed separately.
+if ! command -v podman &>/dev/null; then
+  info "Installing Podman CLI…"
+  brew install podman
+else
+  info "Podman CLI already installed — skipping."
+fi
+
 # Set Apple Hypervisor as default to avoid QEMU issues on Apple Silicon
 CONTAINERS_CONF_DIR="${HOME}/.config/containers"
 CONTAINERS_CONF="${CONTAINERS_CONF_DIR}/containers.conf"
@@ -299,7 +307,12 @@ else
 fi
 
 # Initialise the default Podman machine if it doesn't exist
-if ! podman machine list 2>/dev/null | grep -q "podman-machine-default"; then
+set +e
+podman machine list 2>/dev/null | grep -q "podman-machine-default"
+PODMAN_MACHINE_EXISTS=$?
+set -e
+
+if [[ "${PODMAN_MACHINE_EXISTS}" -ne 0 ]]; then
   info "Initialising Podman machine (${PODMAN_CPUS} CPUs, ${PODMAN_MEMORY}MB RAM, ${PODMAN_DISK}GB disk)…"
   podman machine init \
     --cpus="${PODMAN_CPUS}" \
