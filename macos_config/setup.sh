@@ -107,6 +107,10 @@ CASK_APPS=(
   notion
   bitwarden
   vivaldi
+  aldente
+  rectangle
+  stats
+  appcleaner
 )
 
 for app in "${CASK_APPS[@]}"; do
@@ -192,6 +196,14 @@ if ! command -v fzf &>/dev/null; then
   "$(brew --prefix)/opt/fzf/install" --key-bindings --completion --no-update-rc
 else
   info "fzf already installed — skipping."
+fi
+
+# ── AWS CLI ───────────────────────────────────────────────────────────────
+if ! command -v aws &>/dev/null; then
+  info "Installing AWS CLI…"
+  brew install awscli
+else
+  info "AWS CLI already installed — skipping."
 fi
 
 # =============================================================================
@@ -443,6 +455,10 @@ complete -o default -F __start_kubectl k
 # ── Go workspace (override if you use a custom GOPATH) ───────────────────────
 export GOPATH="$HOME/go"
 export PATH="$PATH:$GOPATH/bin"
+
+# ── AWS CLI ──────────────────────────────────────────────────────────────────
+# Shell completion (requires awscli installed via brew)
+[[ $commands[aws] ]] && complete -C aws_completer aws
 
 # ── Add your own aliases / exports below ─────────────────────────────────────
 ZSH_USER
