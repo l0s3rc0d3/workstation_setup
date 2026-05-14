@@ -559,11 +559,11 @@ step_macos_settings() {
   defaults write com.apple.Spotlight SuggestionsEnabled -bool false
   defaults write com.apple.lookup.shared LookupSuggestionsDisabled -bool true
 
-  info "Disabling Safari search telemetry…"
-  defaults write com.apple.Safari UniversalSearchEnabled -bool false
-  defaults write com.apple.Safari SuppressSearchSuggestions -bool true
-  defaults write com.apple.Safari WebKitDNSPrefetchingEnabled -bool false
-  defaults write com.apple.Safari SendDoNotTrackHTTPHeader -bool true
+  # info "Disabling Safari search telemetry…"
+  # defaults write com.apple.Safari UniversalSearchEnabled -bool false
+  # defaults write com.apple.Safari SuppressSearchSuggestions -bool true
+  # defaults write com.apple.Safari WebKitDNSPrefetchingEnabled -bool false
+  # defaults write com.apple.Safari SendDoNotTrackHTTPHeader -bool true
 
   info "Disabling personalised ads…"
   defaults write com.apple.AdLib allowApplePersonalizedAdvertising -bool false
