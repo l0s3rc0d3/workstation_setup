@@ -481,9 +481,8 @@ step_macos_settings() {
   info "Setting Dock icon size to ${DOCK_SIZE}px…"
   defaults write com.apple.dock tilesize -int "${DOCK_SIZE}"
 
-  info "Enabling Dock magnification…"
-  defaults write com.apple.dock magnification -bool true
-  defaults write com.apple.dock largesize -int 64
+  info "Disabling Dock magnification…"
+  defaults write com.apple.dock magnification -bool false
 
   info "Minimising windows into their application icon…"
   defaults write com.apple.dock minimize-to-application -bool true
