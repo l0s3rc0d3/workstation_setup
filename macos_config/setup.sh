@@ -545,21 +545,63 @@ step_macos_settings() {
   info "Disabling auto-correct…"
   defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
 
+  # ── Privacy / Telemetry ──────────────────────────────────────────────────
+  info "Disabling Apple Intelligence auto opt-in…"
+  defaults write com.apple.CloudSubscriptionFeatures.optIn device -bool false
+  defaults write com.apple.CloudSubscriptionFeatures.optIn auto_opt_in -bool false
+  defaults write com.apple.CloudSubscriptionFeatures.optIn opted_out_buddy -bool true
+
+  info "Disabling Siri…"
+  defaults write com.apple.assistant.support "Assistant Enabled" -bool false
+  defaults write com.apple.Siri StatusMenuVisible -bool false
+
+  info "Disabling Spotlight online suggestions…"
+  defaults write com.apple.Spotlight SuggestionsEnabled -bool false
+  defaults write com.apple.lookup.shared LookupSuggestionsDisabled -bool true
+
+  info "Disabling Safari search telemetry…"
+  defaults write com.apple.Safari UniversalSearchEnabled -bool false
+  defaults write com.apple.Safari SuppressSearchSuggestions -bool true
+  defaults write com.apple.Safari WebKitDNSPrefetchingEnabled -bool false
+  defaults write com.apple.Safari SendDoNotTrackHTTPHeader -bool true
+
+  info "Disabling personalised ads…"
+  defaults write com.apple.AdLib allowApplePersonalizedAdvertising -bool false
+
+  info "Disabling cloud document defaults…"
+  defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
+
+  info "Disabling Handoff…"
+  defaults write ~/Library/Preferences/ByHost/com.apple.coreservices.useractivityd ActivityAdvertisingAllowed -bool false
+  defaults write ~/Library/Preferences/ByHost/com.apple.coreservices.useractivityd ActivityReceivingAllowed -bool false
+
+  info "Disabling AirDrop…"
+  defaults write com.apple.NetworkBrowser DisableAirDrop -bool true
+
+  info "Disabling automatic crash report submission…"
+  sudo defaults write /Library/Application\ Support/CrashReporter/DiagnosticMessagesHistory.plist AutoSubmit -bool false
+  sudo defaults write /Library/Application\ Support/CrashReporter/DiagnosticMessagesHistory.plist ThirdPartyDataSubmit -bool false
+
+  info "Disabling automatic Photos app opening…"
+  defaults -currentHost write com.apple.ImageCapture disableHotPlug -bool true
+
   # ── General ──────────────────────────────────────────────────────────────
   info "Disabling 'Reopen windows when logging back in'…"
   defaults write com.apple.loginwindow TALLogoutSavesState -bool false
 
-  info "Disabling desktop click-to-reveal behavior"
+  info "Disabling desktop click-to-reveal behavior…"
   defaults write com.apple.WindowManager EnableStandardClickToShowDesktop -bool false
 
   info "Expanding save panel by default…"
   defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
   defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
 
-  # ── Apply changes ─────────────────────────────────────────────────────────
-  info "Restarting Dock and Finder to apply changes…"
-  killall Dock
-  killall Finder
+  # ── Apply changes ────────────────────────────────────────────────────────
+  info "Restarting affected services…"
+  killall Dock 2>/dev/null
+  killall Finder 2>/dev/null
+  killall SystemUIServer 2>/dev/null
+  killall cfprefsd 2>/dev/null
 
   warn "Some settings may require a logout/reboot to fully take effect."
 }
