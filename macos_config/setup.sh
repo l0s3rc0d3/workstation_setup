@@ -519,9 +519,9 @@ step_macos_settings() {
   defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
 
   # ── Screenshots ──────────────────────────────────────────────────────────
-  info "Saving screenshots to ~/Desktop/Screenshots…"
-  mkdir -p "${HOME}/Desktop/Screenshots"
-  defaults write com.apple.screencapture location -string "${HOME}/Desktop/Screenshots"
+  info "Saving screenshots to ~/Documents/Screenshots…"
+  mkdir -p "${HOME}/Documents/Screenshots"
+  defaults write com.apple.screencapture location -string "${HOME}/Documents/Screenshots"
 
   info "Saving screenshots in PNG format…"
   defaults write com.apple.screencapture type -string "png"
