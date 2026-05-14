@@ -496,6 +496,9 @@ step_macos_settings() {
   defaults write com.apple.dock autohide-delay -float 0.1
   defaults write com.apple.dock autohide-time-modifier -float 0.3
 
+  info "Disabling Dock launch animations…"
+  defaults write com.apple.dock launchanim -bool false
+
   # ── Finder ───────────────────────────────────────────────────────────────
   info "Showing filename extensions in Finder…"
   defaults write NSGlobalDomain AppleShowAllExtensions -bool true
@@ -516,9 +519,9 @@ step_macos_settings() {
   defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
 
   # ── Screenshots ──────────────────────────────────────────────────────────
-  info "Saving screenshots to ~/Documents/Screenshots…"
-  mkdir -p "${HOME}/Documents/Screenshots"
-  defaults write com.apple.screencapture location -string "${HOME}/Documents/Screenshots"
+  info "Saving screenshots to ~/Desktop/Screenshots…"
+  mkdir -p "${HOME}/Desktop/Screenshots"
+  defaults write com.apple.screencapture location -string "${HOME}/Desktop/Screenshots"
 
   info "Saving screenshots in PNG format…"
   defaults write com.apple.screencapture type -string "png"
