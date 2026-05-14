@@ -116,6 +116,7 @@ step_cask_apps() {
     rectangle
     stats
     appcleaner
+  gpg-suite
   )
   set +e
   for app in "${CASK_APPS[@]}"; do
