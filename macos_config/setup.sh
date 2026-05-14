@@ -596,6 +596,26 @@ step_macos_settings() {
   defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
   defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
 
+  # ── Trackpad & Mouse ────────────────────────────────────────────────────
+  info "Enabling tap-to-click…"
+  defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
+  defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+  defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
+
+  info "Enabling secondary click with two fingers…"
+  defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadRightClick -bool true
+  defaults write com.apple.AppleMultitouchTrackpad TrackpadRightClick -bool true
+
+  info "Setting secondary click to bottom-right corner…"
+  # 0 = two fingers
+  # 1 = bottom left
+  # 2 = bottom right
+  defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad TrackpadCornerSecondaryClick -int 2
+  defaults write com.apple.AppleMultitouchTrackpad TrackpadCornerSecondaryClick -int 2
+
+  info "Disabling mouse acceleration…"
+  defaults write NSGlobalDomain com.apple.mouse.scaling -float -1
+
   # ── Apply changes ────────────────────────────────────────────────────────
   info "Restarting affected services…"
   killall Dock 2>/dev/null
