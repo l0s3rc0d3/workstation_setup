@@ -116,7 +116,7 @@ step_cask_apps() {
     rectangle
     stats
     appcleaner
-  gpg-suite
+    gpg-suite
   )
   set +e
   for app in "${CASK_APPS[@]}"; do
@@ -548,6 +548,9 @@ step_macos_settings() {
   # ── General ──────────────────────────────────────────────────────────────
   info "Disabling 'Reopen windows when logging back in'…"
   defaults write com.apple.loginwindow TALLogoutSavesState -bool false
+
+  info "Disabling desktop click-to-reveal behavior"
+  defaults write com.apple.WindowManager EnableStandardClickToShowDesktop -bool false
 
   info "Expanding save panel by default…"
   defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
